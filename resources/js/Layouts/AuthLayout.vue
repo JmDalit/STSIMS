@@ -62,6 +62,7 @@
                             class="!text-white hover:!bg-transparent"
                             @click="toggleSidebar"
                             :icon="sidebar ? IconChevronLeft : IconChevronRight"
+                            rounded
                         />
                     </div>
                     <div class="flex items-center gap-2">
@@ -72,16 +73,17 @@
                             :check-icon="IconMoon"
                         />
                         <DefaultButton
-                            size="small"
                             variant="text"
                             class="!text-white hover:!bg-transparent"
                             :icon="IconBell"
+                            size="lg"
+                            rounded
                         />
                         <HeadBarButtonMenu />
                     </div>
                 </div>
             </header>
-            <main class="overflow-auto flex-1 p-3">
+            <main class="overflow-auto flex-1 p-2">
                 <slot />
             </main>
         </div>
@@ -93,7 +95,7 @@ import DefaultButton from "../Components/buttons/DefaultButton.vue";
 import HeadBarButtonMenu from "../Components/menus/HeadBarButtonMenu.vue";
 import {
     IconDashboard,
-    IconUserCircle,
+    IconCategory,
     IconUsers,
     IconServerSpark,
     IconUserShield,
@@ -195,6 +197,12 @@ const menuList = [
         slug: "role-management",
         icons: IconUserShield,
         route: "/roles",
+    },
+    {
+        label: "Menu Management",
+        slug: "Routes",
+        icons: IconCategory,
+        route: "/routes",
     },
     {
         label: "User Management",

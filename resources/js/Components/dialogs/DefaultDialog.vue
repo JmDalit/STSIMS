@@ -22,15 +22,13 @@
             </template>
             <div class="mt-3 px-1">
                 <div class="font-semibold text-sm">General Information</div>
-                <span class="block text-gray-400 font-light indent-5 text-sm">
+                <span class="block text-gray-400 font-light indent-5 text-xs">
                     {{ description }}
                 </span>
             </div>
             <form @submit.prevent="submit">
                 <slot></slot>
-            </form>
-            <template #footer>
-                <div class="flex justify-end w-full gap-5 mt-3">
+                <div class="flex justify-end w-full gap-5 mt-7">
                     <div class="flex items-center gap-3">
                         <Button
                             type="button"
@@ -50,7 +48,7 @@
                             </template>
                         </Button>
                         <Button
-                            type="button"
+                            type="submit"
                             :label="buttonLabel"
                             :loading="loading"
                             size="small"
@@ -67,7 +65,7 @@
                         </Button>
                     </div>
                 </div>
-            </template>
+            </form>
         </Dialog>
     </div>
 </template>

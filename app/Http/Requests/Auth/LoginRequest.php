@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
-
+use App\Models\OtpRequests;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -29,10 +29,16 @@ class LoginRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ];
+        if ($this->input('otpRequest')) {
+            return [
+                'email' => ['required', 'string', 'email'],
+            ];
+        } else {
+            return [
+                'email' => ['required'],
+                'password' => ['required'],
+            ];
+        }
     }
 
     public function authenticate(): void
@@ -80,6 +86,7 @@ class LoginRequest extends FormRequest
         $this->ensureIsNotRateLimited();
         $user = User::where('email', $this->input('email'))->first();
 
+
         if (!$user) {
             RateLimiter::hit($this->throttleKey());
 
@@ -87,6 +94,22 @@ class LoginRequest extends FormRequest
                 'email' => trans('auth.failed'),
             ]);
         }
+
+        $checkExpired = OtpRequests::where('user_id', $user->id)->where('expires_at', '>', now())->where('status', 'new')->first();
+
+        if ($checkExpired) {
+            $remaining = now()->diffInSeconds($checkExpired->expires_at);
+
+            $minutes = floor($remaining / 60);
+            $seconds = $remaining % 60;
+
+
+
+            throw ValidationException::withMessages([
+                'email' => "Please wait {$minutes}m {$seconds}s before requesting a new OTP."
+            ]);
+        }
+
 
         RateLimiter::clear($this->throttleKey());
     }

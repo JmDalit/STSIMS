@@ -1,6 +1,5 @@
 <template>
     <Button
-        fluid
         :type="type"
         :label="label"
         :disabled="disabled"
@@ -9,16 +8,20 @@
         :severity="severity"
         @click="onClick"
         :raised="raised"
-        :variant="variant"
+        :text="text"
         :outlined="outlined"
+        :class="[
+            severity === 'primary' && !outlined && !text
+                ? '!bg-blue-600 !border-blue-600 hover:!bg-blue-500 hover:!border-blue-500'
+                : '',
+            className,
+        ]"
         :rounded="rounded"
     >
         <template #icon>
-            <component
-                :is="icon"
-                :size="size == 'small' ? 20 : 22"
-                v-if="icon"
-            ></component>
+            <div>
+                <component :is="icon" :size="iconSize" v-if="icon"></component>
+            </div>
         </template>
     </Button>
 </template>
@@ -28,7 +31,7 @@ const emit = defineEmits(["click"]);
 defineProps({
     label: {
         type: [String],
-        default: null,
+        default: "",
     },
     type: {
         type: [String],
@@ -41,6 +44,10 @@ defineProps({
     size: {
         type: [String],
         default: "",
+    },
+    iconSize: {
+        type: [Number],
+        default: 20,
     },
     loading: {
         type: [Boolean],
@@ -62,13 +69,17 @@ defineProps({
         type: [Boolean],
         default: false,
     },
-    variant: {
-        type: [String],
-        default: null,
+    text: {
+        type: [Boolean],
+        default: false,
     },
     rounded: {
         type: [Boolean],
         default: false,
+    },
+    className: {
+        type: String,
+        default: null,
     },
 });
 

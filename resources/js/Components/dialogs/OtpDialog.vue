@@ -8,7 +8,7 @@
             <template #header>
                 <div class="flex items-center justify-center gap-2 px-2">
                     <Avatar size="medium">
-                        <component :is="icon" size="20"></component>
+                        <IconPasswordUser stroke-width="1.5" size="20" />
                     </Avatar>
 
                     <div class="font-semibold antialiased">
@@ -29,51 +29,6 @@
                 </span>
             </div>
             <div class="mt-6">
-                <!-- <div class="flex item-center justify-center gap-5">
-                    <div class="!w-[70%]">
-                        <InputText
-                            placeholder="Enter your email"
-                            type="email"
-                            v-model="sendEmail.email"
-                            fluid
-                            required
-                            :pt="{
-                                root: {
-                                    class: [
-                                        'dark:!bg-gray-700 !text-sm  border dark:!border-gray-700 dark:!text-white',
-                                    ],
-                                },
-                            }"
-                        />
-                    </div>
-
-                    <Button
-                        type="button"
-                        size="small"
-                        class="!px-5 !rounded-md"
-                    >
-                        <div class="flex items-center justify-center gap-2">
-                            <div>Send</div>
-                            <IconSend2 stroke-width="1.5" size="18" />
-                        </div>
-                    </Button>
-                </div>
-                <div
-                    class="w-full text-center flex flex-col items-center mt-5 gap-3"
-                >
-                    <Divider type="dashed"> </Divider>
-
-                    <div class="text-sm">
-                        Enter the 6-digit code from your email to verify your
-                        identity.
-                    </div>
-                    <InputOtp
-                        v-model="verifyForm.otp"
-                        :length="6"
-                        integerOnly
-                    />
-                </div> -->
-
                 <Stepper value="1" linear class="w-full">
                     <StepPanels class="!p-0">
                         <StepPanel
@@ -88,6 +43,7 @@
                                     placeholder="Enter your email"
                                     type="email"
                                     v-model="sendEmail.email"
+                                    @keyup.enter="sendOtp(activateCallback)"
                                     fluid
                                     required
                                     :pt="{
@@ -103,7 +59,17 @@
                                     code.
                                 </div>
                             </div>
-                            <div class="flex pt-6 justify-end">
+                            <div
+                                class="flex pt-6 justify-between items-center gap-10"
+                            >
+                                <div class="flex-1">
+                                    <DefaultMessages
+                                        messageType="error"
+                                        :message="sendEmail.errors"
+                                        v-if="sendEmail.hasErrors"
+                                    />
+                                </div>
+
                                 <Button
                                     type="button"
                                     size="small"
@@ -139,23 +105,44 @@
                                     verify your identity.
                                 </div>
                             </div>
-                            <div class="flex mt-6 gap-4 justify-end">
-                                <Button
-                                    type="button"
-                                    size="small"
-                                    class="!px-5 !rounded-md"
-                                    label="Back"
-                                    severity="secondary"
-                                    outlined
-                                    @click="activateCallback('1')"
-                                />
-                                <Button
-                                    type="button"
-                                    size="small"
-                                    class="!px-5 !rounded-md"
-                                    label="Login"
-                                    @click="activateCallback('3')"
-                                />
+                            <div
+                                class="flex pt-6 justify-between items-center gap-10 mt-6"
+                            >
+                                <div class="flex-1">
+                                    <DefaultMessages
+                                        messageType="error"
+                                        :message="verifyForm.errors"
+                                        v-if="verifyForm.hasErrors"
+                                    />
+                                </div>
+
+                                <div class="flex gap-4 justify-end">
+                                    <Button
+                                        type="button"
+                                        size="small"
+                                        class="w-30 !rounded-md"
+                                        :disabled="
+                                            countExpired.display ||
+                                            sendEmail.processing
+                                        "
+                                        :label="
+                                            countExpired.display
+                                                ? countExpired.display
+                                                : 'Resend OTP'
+                                        "
+                                        severity="secondary"
+                                        outlined
+                                        @click="sendOtp(activateCallback)"
+                                    />
+                                    <Button
+                                        type="button"
+                                        size="small"
+                                        :loading="verifyForm.processing"
+                                        class="!px-5 !rounded-md"
+                                        label="Continue"
+                                        @click="loginOtp(sendEmail.email)"
+                                    />
+                                </div>
                             </div>
                         </StepPanel>
                     </StepPanels>
@@ -166,35 +153,79 @@
 </template>
 
 <script setup>
-import { useForm } from "@inertiajs/vue3";
-import { IconSend2 } from "@tabler/icons-vue";
-import { InputText } from "primevue";
-defineProps({
-    description: String,
-    title: String,
-    icon: Function,
-    loading: Boolean,
-    buttonLabel: {
-        type: String,
-        default: "Submit",
-    },
-    buttonIcon: {
-        type: [Object, String, Function],
-        default: null,
-    },
-});
+import { useForm, usePage } from "@inertiajs/vue3";
+import { IconPasswordUser } from "@tabler/icons-vue";
+import { ref } from "vue";
+import DefaultMessages from "../messages/DefaultMessages.vue";
 
+let countdownTimer = null;
+const page = usePage();
 const sendEmail = useForm({
     email: "",
+    otpRequest: true,
 });
 const verifyForm = useForm({
     otp: "",
+    email: null,
+});
+const countExpired = ref({
+    minutes: null,
+    seconds: null,
+    display: null,
 });
 
 const visible = defineModel("visible");
+
 const sendOtp = (activateCallback) => {
-    activateCallback("2");
+    sendEmail.post(route("otp.check"), {
+        onSuccess: () => {
+            activateCallback("2");
+            const attempts = page.props.flash?.attempts ?? 1;
+            sendEmail.clearErrors();
+            startCountdown(120 * attempts);
+        },
+    });
 };
+
+const loginOtp = (email) => {
+    verifyForm.email = email;
+    verifyForm.post(route("otp.store"), {
+        onSuccess: () => {
+            verifyForm.clearErrors();
+            verifyForm.reset();
+        },
+    });
+};
+
+function startCountdown(totalSeconds) {
+    let remaining = totalSeconds;
+
+    // Clear previous timer if exists
+    if (countdownTimer) clearInterval(countdownTimer);
+
+    countdownTimer = setInterval(() => {
+        const min = Math.floor(remaining / 60);
+        const sec = remaining % 60;
+
+        countExpired.value.minutes = min;
+        countExpired.value.seconds = sec;
+        countExpired.value.display = `${String(min).padStart(
+            2,
+            "0"
+        )} : ${String(sec).padStart(2, "0")}`;
+
+        remaining--;
+
+        if (remaining < 0) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+
+            countExpired.value.minutes = 0;
+            countExpired.value.seconds = 0;
+            countExpired.value.display = null;
+        }
+    }, 1000);
+}
 </script>
 <style>
 .p-dialog-header {

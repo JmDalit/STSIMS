@@ -22,6 +22,7 @@
                     <DefaultButton
                         label="Login OTP"
                         outlined
+                        class-name="w-full"
                         severity="secondary"
                         :icon="IconPasswordUser"
                         @click="openModal"
@@ -84,9 +85,6 @@
         </div>
         <OtpDialog
             v-model:visible="otpModal"
-            :loading="otpModal"
-            title="Email Verification Code"
-            description="We'll send you a email verification code."
             :icon="IconPasswordUser"
             button-label="Send OTP"
         ></OtpDialog>
@@ -108,10 +106,13 @@ const loginForm = useForm({
     email: "",
     password: "",
     remember: false,
+    otpRequest: false,
 });
 const otpModal = ref(false);
 
 const openModal = () => {
+    loginForm.reset();
+    loginForm.clearErrors();
     otpModal.value = true;
 };
 

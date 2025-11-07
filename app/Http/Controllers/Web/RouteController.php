@@ -7,16 +7,12 @@ use App\References\ListClass;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-
-class RoleController extends Controller
+class RouteController extends Controller
 {
     function index(ListClass $reference)
     {
-
-        $roles = $reference->getRoles(true);
-
-        return Inertia::render('Web/rolePage', [
-            'roles' => $roles
+        return Inertia::render('Web/routePage', [
+            'routes' => $reference->getMenu(true)
         ]);
     }
 }

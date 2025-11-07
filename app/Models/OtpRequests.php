@@ -10,6 +10,7 @@ class OtpRequests extends Model
         'user_id',
         'generated_token',
         'expires_at',
+        'attempts',
         'status'
     ];
 }
