@@ -25,8 +25,8 @@
                 :label="buttonLabel"
                 size="small"
                 @click="openModal"
-                class-name="  !rounded-xl"
-                outlined
+                class-name="w-30  !rounded-xl"
+                raised
             />
         </div>
     </div>

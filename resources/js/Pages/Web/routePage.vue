@@ -14,7 +14,11 @@
                 <ToolbarModule
                     v-model="searchInput"
                     @deleteSearch="clearSearch"
-                    button-label="Create "
+                    button-label="Create"
+                    dialog-title="Create new route"
+                    dialog-description="Add a new navigation route to the system and configure its path and display settings."
+                    :dialog-icon="IconCategory"
+                    dialog-button-label="Save"
                 />
                 <DefaultTable
                     :items="page.props.routes.data"
@@ -41,6 +45,7 @@ import HeaderModule from "../../Modules/Others/HeaderModule.vue";
 import DefaultTable from "../../Components/tables/DefaultTable.vue";
 import ToolbarModule from "../../Modules/Others/ToolbarModule.vue";
 import { ref } from "vue";
+import { IconCategory } from "@tabler/icons-vue";
 
 const page = usePage();
 const searchInput = ref(null);
