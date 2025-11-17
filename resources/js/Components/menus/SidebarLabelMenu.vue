@@ -2,6 +2,7 @@
     <PanelMenu
         :model="list"
         class="flex-1"
+        v-model:expandedKeys="expandedKeys"
         unstyled
         :pt="{
             separator: {
@@ -26,12 +27,12 @@
                 ]"
             >
                 <component
-                    :is="item.icons"
+                    :is="TablerIcons[item.icon]"
                     :size="item.subItem ? '20px' : '23px'"
                     v-show="item.subItem ? false : true"
                     :stroke-width="1.5"
                 />
-                <span class="text-nowrap truncate text-xs">{{
+                <span class="text-nowrap truncate text-xs capitalize">{{
                     item.label
                 }}</span>
             </Link>
@@ -48,11 +49,11 @@
             >
                 <div class="flex items-center">
                     <component
-                        :is="item.icons"
+                        :is="TablerIcons[item.icon]"
                         size="23px"
                         :stroke-width="1.5"
                     />
-                    <span class="ml-2 text-xs text-nowrap">{{
+                    <span class="ml-2 text-xs text-nowrap capitalize">{{
                         item.label
                     }}</span>
                 </div>
@@ -67,15 +68,39 @@
 </template>
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
-
+import * as TablerIcons from "@tabler/icons-vue";
+import { ref, onBeforeMount, watch } from "vue";
 const page = usePage();
-
+const expandedKeys = ref({});
 const active = page.component.split("/")[0];
-const componentActive = page.url;
-defineProps({
+const componentActive = page.component;
+const props = defineProps({
     list: {
         required: true,
         type: Array,
     },
 });
+function syncExpandedKeys() {
+    for (const item of props.list) {
+        if (item.items) {
+            const match = item.items.some(
+                (sub) => sub.component === componentActive
+            );
+
+            if (match && item.label) {
+                expandedKeys.value[item.key] = true;
+            }
+        }
+    }
+}
+onBeforeMount(() => {
+    syncExpandedKeys();
+});
+
+watch(
+    () => page.component,
+    () => {
+        syncExpandedKeys();
+    }
+);
 </script>

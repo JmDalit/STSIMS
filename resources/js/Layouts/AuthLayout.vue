@@ -9,10 +9,10 @@
             >
                 <div
                     :class="[
-                        'h-full w-full flex flex-col justify-between px-[1.2rem]',
+                        'h-full w-full flex flex-col justify-between px-[1.2rem] ',
                     ]"
                 >
-                    <div class="flex gap-2 items-center">
+                    <div class="flex gap-2 items-center top-0 sticky">
                         <div class="">
                             <Image
                                 src="images/seilogo.png"
@@ -39,8 +39,15 @@
                             !sidebar ? 'items-center' : '',
                         ]"
                     >
-                        <SidebarIconMenu :list="menuList" v-if="!sidebar" />
-                        <SidebarLabelMenu :list="menuList" v-else />
+                        <SidebarIconMenu
+                            :list="page.props.menu"
+                            v-if="!sidebar"
+                        />
+                        <SidebarLabelMenu
+                            :list="page.props.menu"
+                            class="overflow-x-hidden"
+                            v-else
+                        />
                     </nav>
                     <div
                         :class="[
@@ -115,7 +122,9 @@ import {
 import { ref, onMounted, Transition } from "vue";
 import SidebarLabelMenu from "../Components/menus/SidebarLabelMenu.vue";
 import DefaultToggle from "../Components/toggleswitches/DefaultToggle.vue";
+import { usePage } from "@inertiajs/vue3";
 
+const page = usePage();
 const isDark = ref(false);
 const sidebar = ref(false);
 const menuList = [
@@ -217,9 +226,7 @@ const menuList = [
         route: "/scholars",
     },
 ];
-function toggleDark(data) {
-    console.log(data);
-
+function toggleDark() {
     localStorage.setItem("theme", isDark.value ? "dark" : "light");
     applyTheme();
 }

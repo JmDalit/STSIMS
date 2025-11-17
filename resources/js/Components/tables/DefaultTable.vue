@@ -1,11 +1,14 @@
 <template>
     <DataTable
+        v-model:expandedRows="expandedRows"
         :value="items"
         paginator
         :rows="pagination.perPage"
         :totalRecords="pagination.total"
         removableSort
         :lazy="true"
+        dataKey="id"
+        :size="size"
         :first="(pagination.currentPage - 1) * pagination.perPage"
         :loading="loading"
         @page="onPageChange"
@@ -37,7 +40,9 @@
         }"
     >
         <slot></slot>
-
+        <template #expansion="slotProps">
+            <slot name="expansion" v-bind="slotProps"></slot>
+        </template>
         <template #paginatorstart>
             <div class="text-gray-500 text-sm">
                 Showing
@@ -57,18 +62,21 @@
             </div>
         </template>
         <template #empty>
-            <div class="flex justify-center font-semibold items-center gap-2">
-                <IconZoomExclamation class="text-slate-400" />
-                <div>No records available.</div>
+            <div
+                class="flex justify-center font-semibold items-center gap-2 text-gray-500"
+            >
+                <IconDatabaseSearch size="20" />
+                <div class="text-sm">No records available.</div>
             </div>
         </template>
     </DataTable>
 </template>
 
 <script setup>
-import { IconZoomExclamation } from "@tabler/icons-vue";
-import { defineProps, defineEmits } from "vue";
+import { IconDatabaseSearch } from "@tabler/icons-vue";
+import { ref } from "vue";
 
+const expandedRows = ref([]);
 const props = defineProps({
     items: [Array, Object],
     pagination: Object,
@@ -76,6 +84,9 @@ const props = defineProps({
     grid: {
         type: Boolean,
         default: false,
+    },
+    size: {
+        type: String,
     },
 });
 

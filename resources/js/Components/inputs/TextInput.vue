@@ -1,8 +1,6 @@
 <template>
     <div class="w-full flex flex-col">
-        <div class="flex items-center gap-1">
-            <span class="text-sm font-medium">{{ label }}</span>
-        </div>
+        <span class="text-sm font-medium" v-show="label">{{ label }}</span>
 
         <InputText
             :type="type"
@@ -19,6 +17,13 @@
                 },
             }"
         />
+        <Message
+            severity="secondary"
+            class="mt-1 mx-1"
+            variant="simple"
+            v-show="message"
+            ><p class="text-xs font-light text-gray-400">{{ message }}</p>
+        </Message>
     </div>
 </template>
 <script setup>
@@ -29,13 +34,17 @@ defineProps({
     },
     label: {
         type: String,
-        default: "Label",
+        default: null,
     },
     placeholder: {
         type: String,
     },
     capitalize: { type: Boolean, default: false },
     error: { type: [String, Array, Object], default: "" },
+    message: {
+        type: String,
+        default: null,
+    },
 });
 const modelValue = defineModel({
     type: [String, Date, Object, null, Number],

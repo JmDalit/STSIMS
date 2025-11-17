@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('province_code')->nullable();
             $table->string('region_code')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_delete')->default(false);
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->timestamps();
         });
     }

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('otp_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->unsignedBigInteger('user_id');
             $table->string('generated_token')->nullable();
             $table->timestamp('expires_at')->nullable();
+            $table->integer('attempts')->default(0);
             $table->string('status')->default('new');
             $table->timestamps();
         });

@@ -27,8 +27,14 @@
                 </span>
             </div>
             <form @submit.prevent="submit">
-                <slot></slot>
-                <div class="flex justify-end w-full gap-5 mt-7">
+                <slot name="forms" />
+
+                <div
+                    class="flex justify-between items-center w-full gap-5 mt-7"
+                >
+                    <div class="flex-1">
+                        <slot name="message" />
+                    </div>
                     <div class="flex items-center gap-3">
                         <Button
                             type="button"

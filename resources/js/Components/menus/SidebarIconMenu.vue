@@ -22,7 +22,7 @@
                 v-tooltip.top="item.subItem ? '' : item.label"
             >
                 <component
-                    :is="item.icons"
+                    :is="TablerIcons[item.icon]"
                     :size="item.subItem ? '20px' : '23px'"
                     :stroke-width="1.5"
                 />
@@ -34,7 +34,7 @@
                 v-ripple
                 :class="[
                     'flex items-center py-[10px] px-[0.7rem] !bg-transparent hover:text-blue-600 cursor-pointer dark:text-white',
-                    active === item.active
+                    item.key == activeMenu
                         ? ' text-blue-600 dark:!text-blue-400 font-semibold'
                         : '',
                 ]"
@@ -42,7 +42,7 @@
                 v-tooltip.top="item.label"
             >
                 <component
-                    :is="item.icons"
+                    :is="TablerIcons[item.icon]"
                     :size="item.subItem ? '20px' : '23px'"
                     :stroke-width="1.5"
                 />
@@ -53,15 +53,32 @@
 
 <script setup>
 import { Link, usePage } from "@inertiajs/vue3";
-
+import * as TablerIcons from "@tabler/icons-vue";
+import { onBeforeMount, ref } from "vue";
 const page = usePage();
-
-const active = page.component.split("/")[0];
-const componentActive = page.url;
-defineProps({
+const activeMenu = ref(null);
+const props = defineProps({
     list: {
         required: true,
         type: Array,
     },
 });
+
+const getActiveRoute = () => {
+    for (const child of props.list) {
+        const match = child.items.some(
+            (sub) => sub.component === page.component
+        );
+
+        if (match) {
+            const active = child.items.find(
+                (sub) => sub.component === page.component
+            );
+
+            activeMenu.value = active.parent_id;
+        }
+    }
+};
+
+onBeforeMount(() => getActiveRoute());
 </script>

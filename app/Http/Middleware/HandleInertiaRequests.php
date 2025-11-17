@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\References\ListClass;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,13 @@ class HandleInertiaRequests extends Middleware
      * @var string
      */
     protected $rootView = 'app';
+    protected $menu;
+
+    public function __construct(ListClass $menu)
+    {
+        $this->menu = $menu;
+    }
+
 
     /**
      * Determines the current asset version.
@@ -37,8 +45,11 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
 
+
+
         return array_merge(parent::share($request), [
             'user' => fn() => Auth::user()?->load(['role', 'profile']),
+            'menu' => fn() => $this->menu?->getMenu('sidebar')
         ]);
     }
 }

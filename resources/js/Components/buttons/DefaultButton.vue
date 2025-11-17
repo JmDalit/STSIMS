@@ -12,7 +12,7 @@
         :outlined="outlined"
         :class="[
             severity === 'primary' && !outlined && !text
-                ? '!bg-blue-600 !border-blue-600 hover:!bg-blue-500 hover:!border-blue-500'
+                ? '!bg-blue-600 !border-blue-600 hover:!bg-blue-500 hover:!border-blue-500 active:!bg-blue-700 active:!border-blue-700'
                 : '',
             className,
         ]"

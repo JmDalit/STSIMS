@@ -3,6 +3,7 @@
         v-model="model"
         v-tooltip.bottom="tooltip"
         @update:model-value="updateValue()"
+        :disabled="disabled"
     >
         <template #handle="{ checked }">
             <component :is="checkIcon" v-if="checked" size="12" />
@@ -23,6 +24,10 @@ defineProps({
         default: null,
     },
     tooltip: { type: String, default: null },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 function updateValue() {

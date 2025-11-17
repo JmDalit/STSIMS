@@ -11,13 +11,13 @@ class ListRole extends Model
         'name',
         'slug',
         'description',
-        'page_visit',
         'is_active',
+        'is_delete',
+        'is_lock',
+        'created_by',
+        'updated_by'
     ];
 
-    protected $casts = [
-        'page_visit' => 'array',
-    ];
 
     public function users()
     {
@@ -29,5 +29,10 @@ class ListRole extends Model
     public function getFormattedDateAttribute()
     {
         return Carbon::parse($this->created_at)->format('M d, Y | h:i a');
+    }
+
+    public function routes()
+    {
+        return $this->hasMany(ListRoutes::class, 'role_id');
     }
 }

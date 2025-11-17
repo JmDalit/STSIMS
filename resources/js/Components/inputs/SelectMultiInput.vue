@@ -1,12 +1,13 @@
 <template>
     <div class="w-full flex flex-col">
         <span class="text-sm font-medium" v-show="label">{{ label }}</span>
-        <Select
+        <MultiSelect
             :placeholder="placeholder"
             v-model="modelValue"
             :disabled="disable"
             :filter="filter"
             optionLabel="name"
+            display="chip"
             @update:modelValue="emit('update-model', $event)"
             :options="options"
             :showClear="clearable"
@@ -14,12 +15,9 @@
             :pt="{
                 root: {
                     class: [
-                        'dark:!bg-gray-700 dark:!text-gray-100 !text-sm dark:!border-gray-700 ',
+                        'dark:!bg-gray-700  !text-sm dark:!border-gray-700 ',
                         capitalize ? 'capitalize' : '',
                     ],
-                },
-                label: {
-                    class: 'dark:!text-white',
                 },
                 option: {
                     class: [
@@ -32,6 +30,9 @@
                 },
                 emptyMessage: {
                     class: '!text-sm',
+                },
+                pcFilter: {
+                    root: 'dark:!bg-gray-700 !text-sm  dark:!text-white dark:!border-gray-700',
                 },
             }"
         />

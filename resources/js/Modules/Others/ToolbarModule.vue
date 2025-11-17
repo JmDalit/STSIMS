@@ -36,14 +36,25 @@
         :title="dialogTitle"
         :description="dialogDescription"
         :button-label="dialogButtonLabel"
+        :loading="dialogButtonLoading"
         @submit-form="triggerSave"
     >
-        <slot name="form" />
+        <template #forms>
+            <slot name="form" />
+        </template>
+        <template #message>
+            <DefaultMessages
+                v-show="messageHasErrors"
+                :message="messageErrors"
+                :message-type="messageType"
+            ></DefaultMessages>
+        </template>
     </DefaultDialog>
 </template>
 <script setup>
 import { IconCirclePlusFilled, IconSearch, IconX } from "@tabler/icons-vue";
 import DefaultButton from "../../Components/buttons/DefaultButton.vue";
+import DefaultMessages from "../../Components/messages/DefaultMessages.vue";
 import IconTextInput from "../../Components/inputs/IconTextInput.vue";
 import DefaultDialog from "../../Components/dialogs/DefaultDialog.vue";
 import { ref } from "vue";
@@ -56,7 +67,11 @@ defineProps({
     dialogTitle: String,
     dialogIcon: Function,
     dialogButtonLabel: String,
+    dialogButtonLoading: Boolean,
     buttonLabel: String,
+    messageHasErrors: Boolean,
+    messageErrors: Object,
+    messageType: String,
 });
 
 const modelValue = defineModel({

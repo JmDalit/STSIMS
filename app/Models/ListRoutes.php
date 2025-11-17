@@ -9,11 +9,25 @@ class ListRoutes extends Model
     protected $fillable = [
         'route',
         'component',
+        'roles',
+        'main_id',
         'slug',
+        'label',
         'icon',
         'is_submenu',
+        'is_active',
+        'is_delete',
         'order_no',
-        'parent_id',
-        'is_active'
+        'created_by',
+        'updated_by'
     ];
+
+    protected $casts = [
+        'roles' => 'array',
+    ];
+
+    public function children()
+    {
+        return $this->hasMany(ListRoutes::class, 'main_id');
+    }
 }
