@@ -17,14 +17,14 @@ class ListRole extends Model
         'created_by',
         'updated_by'
     ];
-
+    protected $appends = ['formatted_date'];
 
     public function users()
     {
         return $this->hasMany(User::class, 'role_id');
     }
 
-    protected $appends = ['formatted_date'];
+
 
     public function getFormattedDateAttribute()
     {

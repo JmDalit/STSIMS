@@ -8,13 +8,15 @@
         removableSort
         :lazy="true"
         dataKey="id"
+        :rowGroupMode="rowGroupMode"
+        :groupRowsBy="groupRowsBy"
+        sortMode="single"
         :size="size"
         :first="(pagination.currentPage - 1) * pagination.perPage"
         :loading="loading"
         @page="onPageChange"
         responsiveLayout="scroll"
         :showGridlines="grid"
-        class="bg-transparent"
         :pt="{
             root: {
                 class: '!text-sm ',
@@ -37,12 +39,19 @@
             bodyRow: {
                 class: '!bg-transparent dark:!border-gray-700',
             },
+            rowGroupHeader: {
+                class: 'dark:!bg-transparent !bg-gray-50 dark:!text-gray-300',
+            },
         }"
     >
+        <template #groupheader="slotProps">
+            <slot name="groupheader" v-bind="slotProps" />
+        </template>
         <slot></slot>
         <template #expansion="slotProps">
             <slot name="expansion" v-bind="slotProps"></slot>
         </template>
+
         <template #paginatorstart>
             <div class="text-gray-500 text-sm">
                 Showing
@@ -87,6 +96,14 @@ const props = defineProps({
     },
     size: {
         type: String,
+    },
+    groupRowsBy: {
+        type: String,
+        default: null,
+    },
+    rowGroupMode: {
+        type: String,
+        default: null,
     },
 });
 

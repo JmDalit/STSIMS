@@ -15,6 +15,7 @@
                         : '',
             },
         }"
+        :closable="closable"
     >
         <div class="flex items-center gap-2">
             <IconExclamationCircleFilled v-if="messageType === 'warn'" />
@@ -40,9 +41,13 @@ const props = defineProps({
     messageType: String,
     message: [Array, Object],
     icon: [Object, Function],
+    closable: {
+        type: Boolean,
+        default: false,
+    },
 });
 const firstError = computed(() => {
-    const errors = Object.values(props.message);
+    const errors = props.message ? Object.values(props.message) : [];
     return errors.length ? errors[0] : null;
 });
 </script>

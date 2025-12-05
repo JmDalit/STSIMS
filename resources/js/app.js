@@ -4,11 +4,13 @@ import "primeicons/primeicons.css";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { definePreset } from "@primeuix/themes";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "ziggy-js";
 import { Ziggy } from "./ziggy";
 import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
-
+import ToastService from "primevue/toastservice";
+import ConfirmationService from "primevue/confirmationservice";
 const appName = import.meta.env.VITE_APP_NAME || "STSIMS";
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -49,13 +51,17 @@ const MyPreset = definePreset(Aura, {
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
 
-    resolve: (name) => {
-        const pages = import.meta.glob("./Pages/**/*.vue", { eager: true });
-        return pages[`./Pages/${name}.vue`];
-    },
+    // resolve: (name) => {
+    //     const pages = import.meta.glob("./Pages/**/*.vue", { eager: true });
+    //     return pages[`./Pages/${name}.vue`];
+    // },
+    resolve: (name) =>
+        resolvePageComponent(
+            `./Pages/${name}.vue`,
+            import.meta.glob("./Pages/**/*.vue")
+        ),
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
-            .use(plugin)
             .use(PrimeVue, {
                 theme: {
                     preset: MyPreset,
@@ -65,6 +71,9 @@ createInertiaApp({
                     ripple: true,
                 },
             })
+            .use(plugin)
+            .use(ToastService)
+            .use(ConfirmationService)
             .use(ZiggyVue, Ziggy)
             .mount(el);
     },

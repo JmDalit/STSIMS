@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('list_courses', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('slug')->unique();
+            $table->string('field')->nullable();
+            $table->string('abbreviation')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_delete')->default(false);
             $table->string('created_by')->nullable();

@@ -13,10 +13,10 @@ use Inertia\Inertia;
 
 class RoleController extends Controller
 {
-    function index(ListClass $reference)
+    function index(ListClass $reference, Request $request)
     {
         return Inertia::render('Web/rolePage', [
-            'roles' => $reference->getRoles(true)
+            'roles' => $reference->getRoles(true, $request->input('search'))
         ]);
     }
 
@@ -37,7 +37,54 @@ class RoleController extends Controller
 
         return redirect()->back()->with('flash', [
             'status' => 'success',
+            'title'  => 'Role Created',
             'message' => 'Role successfully created.',
-        ]);;
+        ]);
+    }
+
+    function update(RoleRequest $request, string $id, string $type)
+    {
+
+        $data = $request->validated();
+        $find = ListRole::findOrFail($id);
+
+        if ($type == 'form') {
+
+            $find->update([
+                'name'          => $data['name'],
+                'slug'          => $data['slug'],
+                'description'   => $data['description'],
+                'is_lock'       => $data['isLock'],
+                'updated_by'    => Auth::user()->profile->fullname,
+                'updated_at'    => now()
+            ]);
+        } else {
+            $find->update([
+                'is_active' => $data['isActive'],
+            ]);
+        }
+
+
+
+        return redirect()->back()->with('flash', [
+            'status' => 'success',
+            'title'  => 'Role Updated',
+            'message' => 'Role successfully updated.',
+        ]);
+    }
+
+    function destroy(int $id)
+    {
+        $find = ListRole::findOrFail($id);
+        $find->update([
+            'is_delete' => true,
+
+        ]);
+
+        return redirect()->back()->with('flash', [
+            'status' => 'success',
+            'title'  => 'Role Deleted',
+            'message' => 'Role successfully deleted.',
+        ]);
     }
 }

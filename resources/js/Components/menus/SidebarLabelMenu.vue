@@ -18,7 +18,7 @@
                 preserve-scroll
                 :class="[
                     'flex items-center gap-3 px-[0.7rem] py-[10px]  hover:text-blue-500 transition-all duration-300 w-full',
-                    page.url === item.route
+                    item.component === page.component
                         ? ' text-blue-600 dark:text-blue-400 font-semibold'
                         : '',
                     item.subItem

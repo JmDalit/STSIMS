@@ -22,11 +22,18 @@ class RoleRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['required', Rule::unique('list_roles', 'name')->ignore($this->route('id')), 'string'],
-            'slug' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'isLock' => ['boolean']
-        ];
+        if ($this->type == 'status') {
+            return [
+                'isActive' => ['boolean']
+            ];
+        } else {
+            return [
+                'name' => ['required', Rule::unique('list_roles', 'name')->ignore($this->route('id')), 'string'],
+                'slug' => ['required', 'string'],
+                'description' => ['required', 'string'],
+                'isLock' => ['boolean'],
+
+            ];
+        }
     }
 }

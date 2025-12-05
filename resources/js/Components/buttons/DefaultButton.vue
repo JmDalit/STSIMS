@@ -19,8 +19,8 @@
         :rounded="rounded"
     >
         <template #icon>
-            <div>
-                <component :is="icon" :size="iconSize" v-if="icon"></component>
+            <div v-if="icon">
+                <component :is="icon" :size="iconSize"></component>
             </div>
         </template>
     </Button>

@@ -7,12 +7,11 @@ import vue from "@vitejs/plugin-vue";
 import { fileURLToPath, URL } from "node:url";
 export default defineConfig({
     plugins: [
-        vue(),
         laravel({
             input: ["resources/css/app.css", "resources/js/app.js"],
             refresh: true,
         }),
-
+        vue(),
         tailwindcss(),
         Components({
             resolvers: [PrimeVueResolver()],

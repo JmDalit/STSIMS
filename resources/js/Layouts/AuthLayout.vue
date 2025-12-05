@@ -15,7 +15,7 @@
                     <div class="flex gap-2 items-center top-0 sticky">
                         <div class="">
                             <Image
-                                src="images/seilogo.png"
+                                src="/images/seilogo.png"
                                 alt="Logo"
                                 width="39"
                                 height="39"

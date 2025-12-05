@@ -28,9 +28,19 @@
         }"
     >
         <slot></slot>
+        <template #empty>
+            <div
+                class="flex justify-center font-semibold items-center gap-2 text-gray-500"
+            >
+                <IconDatabaseSearch size="20" />
+                <div class="text-sm">No records available.</div>
+            </div>
+        </template>
     </TreeTable>
 </template>
 <script setup>
+import { IconDatabaseSearch } from "@tabler/icons-vue";
+
 defineProps({
     items: [Array, Object],
 });

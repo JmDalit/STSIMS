@@ -22,20 +22,29 @@ class RouteRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'role'      => ['required'],
-            'label'     => ['required', 'string'],
-            'slug'      => [
-                'required',
-                Rule::unique('list_routes', 'label')->ignore($this->route('id'))
-            ],
-            'icon'      => ['required'],
-            'route'     => ['nullable'],
-            'component' => ['nullable'],
-            'isSubmenu' => ['boolean'],
-            'submenu'   => ['required_if:isSubmenu,true'],
 
-        ];
+
+
+        if ($this->type == 'status') {
+            return [
+                'isActive' => ['boolean']
+            ];
+        } else {
+            return [
+                'role'      => ['required'],
+                'label'     => ['required', 'string'],
+                'slug'      => [
+                    'required',
+                    Rule::unique('list_routes', 'label')->ignore($this->route('id'))
+                ],
+                'icon'      => ['required'],
+                'route'     => ['nullable'],
+                'component' => ['nullable'],
+                'isSubmenu' => ['boolean'],
+                'submenu'   => ['required_if:isSubmenu,true'],
+
+            ];
+        }
     }
     public function messages()
     {

@@ -65,6 +65,15 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if ($user->is_delete) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'Your account has been deleted. Please contact support.',
+            ]);
+        }
+
+
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('can_delete')->default(false);
             $table->boolean('is_verified')->default(false);
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_delete')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

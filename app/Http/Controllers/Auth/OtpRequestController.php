@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\OtpRequest;
-use App\Mail\Mail\OtpRequestMail;
+use App\Mail\OtpRequestMail;
 use App\Models\OtpRequests;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,6 +30,7 @@ class OtpRequestController extends Controller
                 'attempts' => 1,
                 'expires_at' => now()->addMinutes(2),
             ]);
+
 
             Mail::to($user->email)->send(new OtpRequestMail($genToken, $user->profile->fullname));
 

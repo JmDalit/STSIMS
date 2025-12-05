@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
@@ -18,8 +19,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-
+        'role_id',
         'email',
+        'can_create',
+        'can_edit',
+        'can_delete',
+        'is_active',
+        'is_verified',
+        'is_delete',
         'password',
         'remember'
     ];
@@ -33,7 +40,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
+    protected $appends = ['formatted_date', 'role_array'];
     /**
      * Get the attributes that should be cast.
      *
@@ -56,8 +63,16 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
-    public function otp()
+    public function getFormattedDateAttribute()
     {
-        return $this->hasMany(OtpRequests::class);
+        return Carbon::parse($this->created_at)->format('M d, Y | h:i a');
+    }
+
+    public function getRoleArrayAttribute()
+    {
+        return $this->role ? [
+            'id' => $this->role->id,
+            'name' => $this->role->name,
+        ] : null;
     }
 }

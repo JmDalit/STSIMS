@@ -15,7 +15,7 @@
                 :href="item.route"
                 :class="[
                     'flex items-center gap-3 px-[0.7rem] py-[10px] rounded hover:text-blue-600 w-full dark:text-white',
-                    page.url === item.route
+                    item.component === page.component
                         ? ' text-blue-600 dark:!text-blue-400 font-semibold'
                         : '',
                 ]"

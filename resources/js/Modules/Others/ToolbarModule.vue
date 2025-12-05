@@ -5,8 +5,7 @@
                 :icon="IconSearch"
                 placeholder="Search keywords..."
                 v-model="modelValue"
-                class="w-96"
-                @enter="triggerEnter"
+                class="w-64 lg:w-96"
             />
             <DefaultButton
                 rounded
@@ -24,7 +23,7 @@
                 :icon="IconCirclePlusFilled"
                 :label="buttonLabel"
                 size="small"
-                @click="openModal"
+                @click="triggerOpenModal"
                 class-name="w-30  !rounded-xl"
                 raised
             />
@@ -60,7 +59,7 @@ import DefaultDialog from "../../Components/dialogs/DefaultDialog.vue";
 import { ref } from "vue";
 
 const modal = ref(false);
-const emit = defineEmits(["searchEnter", "deleteSearch", "saveForm"]);
+const emit = defineEmits(["deleteSearch", "saveForm", "buttonOpenModal"]);
 
 defineProps({
     dialogDescription: String,
@@ -83,13 +82,23 @@ const openModal = () => {
     modal.value = true;
 };
 
-const triggerEnter = () => {
-    emit("searchEnter", modelValue);
+const closeModal = () => {
+    modal.value = false;
 };
+
 const triggerDelete = () => {
     emit("deleteSearch");
 };
 const triggerSave = () => {
     emit("saveForm");
 };
+
+const triggerOpenModal = () => {
+    emit("buttonOpenModal");
+};
+
+defineExpose({
+    openModal,
+    closeModal,
+});
 </script>
