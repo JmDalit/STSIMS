@@ -165,8 +165,16 @@ class ListClass
                         'is_delete' => false,
                         'is_active' => true,
                     ])
-                    ->with(['school', 'school.reference', 'school.campuses', 'address', 'term', 'grading', 'agency'])
-
+                    ->with([
+                        'school',
+                        'school.reference',
+                        'school.campuses',
+                        'courses.subjects',
+                        'address',
+                        'term',
+                        'grading',
+                        'agency'
+                    ])
                     ->paginate(10);
                 break;
         }

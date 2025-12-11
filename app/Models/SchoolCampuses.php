@@ -36,6 +36,11 @@ class SchoolCampuses extends Model
         return $this->belongsTo(ListReferences::class, 'term_id', 'id');
     }
 
+    public function courses()
+    {
+        return $this->hasMany(SchoolCampusCourses::class, 'campus_id', 'id');
+    }
+
     public function grading()
     {
         return $this->belongsTo(ListReferences::class, 'grading_id', 'id');

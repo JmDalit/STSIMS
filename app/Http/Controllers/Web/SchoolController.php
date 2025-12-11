@@ -9,7 +9,6 @@ use App\References\ListClass;
 use App\References\LocationClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class SchoolController extends Controller
@@ -23,6 +22,8 @@ class SchoolController extends Controller
             'agencyOption' => $ref->getAgencies(false),
             'gradingOption' => $ref->getRefs('option', null, null, 'Grading System'),
             'resultSearch' => $location->getFullAddress($request->input('autosuggest')),
+            'courseOption' => $ref->getCourses('option'),
+            'subClassOption' => $ref->getRefs('option', null, 'Subject', null)
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\OtpRequestController;
+use App\Http\Controllers\Web\CampusCourseController;
 use App\Http\Controllers\Web\CourseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\DashboardController;
@@ -67,6 +68,10 @@ Route::middleware('auth', 'web')->group(function () {
     Route::post('academic/universities', [SchoolController::class, 'store'])->name('academic.universities.store');
     Route::put('academic/universities/{id}/{type}', [SchoolController::class, 'update'])->name('academic.universities.update');
     Route::delete('academic/universities/{id}/{type}', [SchoolController::class, 'destroy'])->name('academic.universities.destroy');
+
+    Route::post('academic/universities/course', [CampusCourseController::class, 'store'])->name('academic.universities.course.store');
+    Route::put('academic/universities/course/{id}/{type}', [CampusCourseController::class, 'update'])->name('academic.universities.course.update');
+    Route::delete('academic/universities/course/{id}/{type}', [CampusCourseController::class, 'destroy'])->name('academic.universities.course.destroy');
 });
 Route::middleware('auth', 'web', 'role')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

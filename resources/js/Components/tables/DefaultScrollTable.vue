@@ -1,9 +1,11 @@
 <template>
     <DataTable
-        :value="customers"
+        v-model:expandedRows="expandedRows"
+        :value="items"
         :rowGroupMode="rowGroupMode"
         :groupRowsBy="groupRowsBy"
         sortMode="single"
+        dataKey="id"
         :sortOrder="1"
         scrollable
         :scrollHeight="scrollHeight"
@@ -41,6 +43,10 @@
         <template #groupfooter="slotProps">
             <slot name="groupfooter" v-bind="slotProps" />
         </template>
+        <template #expansion="slotProps">
+            <slot name="expansion" v-bind="slotProps"></slot>
+        </template>
+
         <template #empty>
             <div
                 class="flex justify-center font-semibold items-center gap-2 text-gray-500"
@@ -53,7 +59,9 @@
 </template>
 <script setup>
 import { IconDatabaseSearch } from "@tabler/icons-vue";
+import { ref } from "vue";
 
+const expandedRows = ref([]);
 defineProps({
     items: [Array, Object, null],
     scrollHeight: String,

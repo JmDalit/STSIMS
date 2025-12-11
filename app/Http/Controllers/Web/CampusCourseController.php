@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Http\Controllers\Web;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\CampusCourseRequest;
+use App\Models\SchoolCampusCourses;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class CampusCourseController extends Controller
+{
+    public function store(CampusCourseRequest $request)
+    {
+        $data = $request->validated();
+
+        $course = SchoolCampusCourses::create([
+            'years' => $data['years'],
+            'course_id' => $data['course']['id'],
+            'campus_id' => $data['campusId'],
+            'created_by' => Auth::user()->profile->fullname
+        ]);
+
+        foreach ($data['subjects'] as $subject) {
+            $course->subjects()->create([
+                'name'          => $subject['name'],
+                'subject_code'  => $subject['code'],
+                'subject_class' => $subject['class']['name'],
+                'unit'          => $subject['unit'],
+                'created_by'    => Auth::user()->profile->fullname,
+            ]);
+        }
+
+        return redirect()->back()->with('flash', [
+            'status' => 'success',
+            'title'  => 'Subject Created',
+            'message' => 'Subject successfully created.',
+        ]);;
+    }
+
+
+    public function update(CampusCourseRequest $request, string $id, string $type)
+    {
+        $data = $request->validated();
+        $find = SchoolCampusCourses::findOrFail($id);
+
+        if ($type == 'form') {
+
+            $find->update([
+                'course_id' => $data['course']['id'],
+                'years'     => $data['years']
+            ]);
+
+            foreach ($data['subjects'] as $subject) {
+
+                if (!empty($subject['id'])) {
+                    $campuseCourseModel = $find->subjects()->find($subject['id']);
+                    $campuseCourseModel->update([
+                        'name'          => $subject['name'],
+                        'subject_code'  => $subject['code'],
+                        'subject_class' => $subject['class']['name'],
+                        'unit'          => $subject['unit'],
+                        'updated_by'    => Auth::user()->profile->fullname,
+                    ]);
+                } else {
+                    $find->subjects()->create([
+                        'name'          => $subject['name'],
+                        'subject_code'  => $subject['code'],
+                        'subject_class' => $subject['class']['name'],
+                        'unit'          => $subject['unit'],
+                        'created_by'    => Auth::user()->profile->fullname,
+                    ]);
+                }
+            }
+        } else {
+            $find->update([
+                'is_active' => $data['isActive'],
+            ]);
+        }
+
+        return redirect()->back()->with('flash', [
+            'status' => 'success',
+            'title'  => 'Campus Course Updated',
+            'message' => 'Campus course successfully updated.',
+        ]);
+    }
+}

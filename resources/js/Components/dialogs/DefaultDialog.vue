@@ -6,6 +6,7 @@
             :class="[
                 ' w-[90%] sm:w-1/3 dark:!bg-gray-800 dark:!text-gray-300 dark:!border-gray-600',
                 maximizable ? 'rounded-none' : '!rounded-[15px]',
+                widthSet,
             ]"
             :maximizable="maximizable"
         >
@@ -35,7 +36,7 @@
                     <div class="flex-1">
                         <slot name="message" />
                     </div>
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-3" v-show="!hideFooter">
                         <Button
                             type="button"
                             size="small"
@@ -94,6 +95,11 @@ defineProps({
         type: Boolean,
         default: false,
     },
+    hideFooter: {
+        type: Boolean,
+        default: false,
+    },
+    widthSet: String,
 });
 
 const visible = defineModel("visible");

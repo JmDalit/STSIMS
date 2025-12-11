@@ -50,21 +50,6 @@
                         <div class="overflow-y-auto max-h-90 px-2">
                             <div class="flex items-center justify-between">
                                 <div class="font-semibold">Campus</div>
-                                <!-- <div class="flex gap-3">
-                                    <Button
-                                        size="small"
-                                        class="!text-xs"
-                                        rounded
-                                        @click="addCampus"
-                                    >
-                                        <div class="flex items-center gap-2">
-                                            <IconCirclePlusFilled
-                                                size="18"
-                                            ></IconCirclePlusFilled>
-                                            <div>Add Campus</div>
-                                        </div>
-                                    </Button>
-                                </div> -->
                             </div>
                             <div
                                 class="flex flex-col gap-2 mt-4"
@@ -285,7 +270,19 @@
                     <Column header="Name">
                         <template #body="prop">
                             <div class="flex items-center gap-2">
-                                <div class="indent-5">
+                                <div class="">
+                                    <DefaultButton
+                                        size="small"
+                                        rounded
+                                        class-name="!p-0 !m-0"
+                                        :icon="IconArrowRight"
+                                        :icon-size="18"
+                                        @click="openDrawer(prop)"
+                                        text
+                                        severity="secondary"
+                                    />
+                                </div>
+                                <div>
                                     {{ prop.data.address.municipality.name }}
                                 </div>
 
@@ -319,215 +316,17 @@
                             </div>
                         </template>
                     </Column>
-                    <Column field="options" class="w-[5%]">
-                        <template #body="props">
-                            <div class="flex w-full justify-end">
-                                <DefaultButton
-                                    size="small"
-                                    rounded
-                                    class-name="!p-0 !m-0"
-                                    :icon="IconArrowRight"
-                                    :icon-size="18"
-                                    @click="openDrawer(props)"
-                                    text
-                                    severity="secondary"
-                                />
-                            </div>
-                        </template>
-                    </Column>
                 </DefaultTable>
             </div>
         </div>
+        <DrawerSchoolModule
+            ref="drawerRef"
+            :value="dataDrawer"
+            :course-option="page.props.courseOption"
+            :sub-class-option="page.props.subClassOption"
+        ></DrawerSchoolModule>
         <DefaultToast ref="toastRef" />
         <DefaultConfirmDialog ref="confirmRef" />
-        <DefaultDrawer v-model:visible="drawerComponent" size="!w-[50rem]">
-            <template #header>
-                <div class="flex items-center gap-2">
-                    <div class="">
-                        <Avatar
-                            v-if="dataDrawer.school.photo == null"
-                            :label="
-                                dataDrawer.school.name.charAt(0).toUpperCase()
-                            "
-                            style="background-color: #dee9fc; color: #1a2551"
-                            shape="circle"
-                            class="!w-[50px] !h-[50px] font-extrabold !text-2xl"
-                        />
-
-                        <Avatar
-                            v-else
-                            style="background-color: #dee9fc; color: #1a2551"
-                            shape="circle"
-                            :image="dataDrawer.school.photo"
-                            class="!w-[50px] !h-[50px]"
-                        />
-                    </div>
-
-                    <div class="flex flex-col">
-                        <div class="font-bold">
-                            {{ dataDrawer.fullname_campus }}
-                        </div>
-                        <div
-                            class="text-xs flex items-center gap-1 text-gray-500"
-                        >
-                            <IconMapPin size="18" />
-                            <div>
-                                {{ dataDrawer.address.full_address.name }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </template>
-            <template #body>
-                <div class="flex items-center justify-end px-5">
-                    <DefaultButton
-                        size="small"
-                        label="Update"
-                        :icon="IconPencil"
-                        :icon-size="18"
-                        raised
-                        class-name="!rounded-xl w-30 !text-xs"
-                    />
-                </div>
-                <div class="flex flex-col gap-5 px-5 py-2">
-                    <div class="flex justify-between gap-2">
-                        <div class="w-[50%] flex items-center gap-2">
-                            <div class="bg-slate-200 p-2 shadow rounded-xl">
-                                <IconUserStar size="20" />
-                            </div>
-                            <div class="flex flex-col flex-1">
-                                <div
-                                    class="text-xs font-semibold flex items-center"
-                                >
-                                    <div>DEAN:</div>
-                                </div>
-                                <div class="text-sm font-light">
-                                    John Doe Reverse
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-[50%] flex items-center gap-2">
-                            <div class="bg-slate-200 p-2 shadow rounded-xl">
-                                <IconUserQuestion size="20" />
-                            </div>
-                            <div class="flex flex-col flex-1">
-                                <div
-                                    class="text-xs font-semibold flex items-center"
-                                >
-                                    <div>REGISTRAR:</div>
-                                </div>
-                                <div class="text-sm font-light">
-                                    John Doe Reverse
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <div class="w-[50%] flex items-center gap-2">
-                            <div class="bg-slate-200 p-2 shadow rounded-xl">
-                                <IconPhone size="20" />
-                            </div>
-                            <div class="flex flex-col flex-1">
-                                <div
-                                    class="text-xs font-semibold flex items-center"
-                                >
-                                    <div>CONTACT NO:</div>
-                                </div>
-                                <div class="text-sm font-light">
-                                    973123613236
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-[50%] flex items-center gap-2">
-                            <div class="bg-slate-200 p-2 shadow rounded-xl">
-                                <IconAt size="20" />
-                            </div>
-                            <div class="flex flex-col flex-1">
-                                <div
-                                    class="text-xs font-semibold flex items-center"
-                                >
-                                    <div>EMAIL:</div>
-                                </div>
-                                <div class="text-sm font-light">
-                                    JohnDoe@gmail.com
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between gap-2">
-                        <div class="w-[50%] flex items-center gap-2">
-                            <div class="bg-slate-200 p-2 shadow rounded-xl">
-                                <IconWorldWww size="20" />
-                            </div>
-                            <div class="flex flex-col flex-1">
-                                <div
-                                    class="text-xs font-semibold flex items-center"
-                                >
-                                    <div>VISIT PAGE:</div>
-                                </div>
-                                <div class="text-sm font-light">
-                                    dost.gov.ph
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <Divider align="left" type="dashed" class="!m-0">
-                    <span class="text-xs font-semibold">Courses</span>
-                </Divider>
-                <div class="px-5 py-2 gap-5 flex flex-col">
-                    <div class="flex items-center justify-between">
-                        <div class="flex-1 flex items-center gap-2">
-                            <IconTextInput
-                                :icon="IconSearch"
-                                placeholder="Search keywords..."
-                                class="w-64 lg:w-96"
-                            />
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <DefaultButton
-                                :icon="IconCirclePlusFilled"
-                                :icon-size="18"
-                                label="Course"
-                                @click="courseDialog = true"
-                                size="small"
-                                class-name="w-30 !rounded-xl w-26 !text-xs"
-                                raised
-                            />
-                        </div>
-                    </div>
-                    <DefaultScrollTable></DefaultScrollTable>
-                </div>
-                <Divider align="left" type="dashed" class="!m-0">
-                    <span class="text-xs font-semibold">Gradings</span>
-                </Divider>
-                <div class="px-5 py-2 gap-5 flex flex-col">
-                    <div class="flex items-center justify-between">
-                        <div class="flex-1 flex items-center gap-2">
-                            <IconTextInput
-                                :icon="IconSearch"
-                                placeholder="Search keywords..."
-                                class="w-64 lg:w-96"
-                            />
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <DefaultButton
-                                :icon="IconCirclePlusFilled"
-                                :icon-size="18"
-                                label="Grade"
-                                size="small"
-                                class-name="w-30  !rounded-xl  w-26 !text-xs"
-                                raised
-                            />
-                        </div>
-                    </div>
-                    <DefaultScrollTable></DefaultScrollTable>
-                </div>
-            </template>
-        </DefaultDrawer>
-        <DefaultDialog v-model:visible="courseDialog"></DefaultDialog>
     </AuthLayout>
 </template>
 <script setup>
@@ -539,12 +338,8 @@ import TextInput from "../../Components/inputs/TextInput.vue";
 import DefaultButton from "../../Components/buttons/DefaultButton.vue";
 import AutoCompleteInput from "../../Components/inputs/AutoCompleteInput.vue";
 import DefaultToast from "../../Components/messages/DefaultToast.vue";
-import DefaultDrawer from "../../Components/dialogs/DefaultDrawer.vue";
 import DefaultConfirmDialog from "../../Components/dialogs/DefaultConfirmDialog.vue";
-import IconTextInput from "../../Components/inputs/IconTextInput.vue";
 import SelectInput from "../../Components/inputs/SelectInput.vue";
-import DefaultScrollTable from "../../Components/tables/DefaultScrollTable.vue";
-import DefaultDialog from "../../Components/dialogs/DefaultDialog.vue";
 
 import { computed, ref, watch } from "vue";
 import { Head, router, useForm, usePage } from "@inertiajs/vue3";
@@ -555,19 +350,9 @@ import {
     IconCirclePlusFilled,
     IconCircleXFilled,
     IconArrowRight,
-    IconMapPin,
-    IconPencil,
-    IconUserStar,
-    IconUserQuestion,
-    IconPhone,
-    IconAt,
-    IconWorldWww,
-    IconSearch,
 } from "@tabler/icons-vue";
+import DrawerSchoolModule from "../../Modules/Others/DrawerSchoolModule.vue";
 
-const drawerComponent = ref(false);
-const gradeDialog = ref(false);
-const courseDialog = ref(false);
 const page = usePage();
 const searchInput = ref(null);
 const dataDrawer = ref(null);
@@ -577,6 +362,7 @@ const selectedRow = ref(null);
 const toolbarRef = ref(null);
 const toastRef = ref(null);
 const confirmRef = ref(null);
+const drawerRef = ref(false);
 const menu = ref(null);
 const universityForm = useForm({
     id: null,
@@ -622,8 +408,7 @@ const toggleOption = (event, rowData) => {
 
 const openDrawer = (res) => {
     dataDrawer.value = res.data;
-    console.log(res.data);
-    drawerComponent.value = true;
+    drawerRef.value.openDrawer();
 };
 
 const menuItems = computed(() => {
